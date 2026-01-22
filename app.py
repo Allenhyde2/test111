@@ -4,11 +4,15 @@ import google.generativeai as genai
 import os
 
 app = Flask(__name__)
-CORS(app)  # 다른 도메인(웹사이트)에서 접속 허용
+CORS(app, resources={r"/*": {"origins": "*"}})  # 다른 도메인(웹사이트)에서 접속 허용
 
 # 1. API 키 설정 (환경 변수 권장)
 # 실제 배포 시에는 os.environ.get("GEMINI_API_KEY") 등으로 관리하세요.
 genai.configure(api_key="GEMINI_API_KEY")
+if not api_key:
+        print("Error: GEMINI_API_KEY 환경 변수가 설정되지 않았습니다.")
+    else:
+        genai.configure(api_key=api_key)
 
 # 2. 모델 설정 (사용자 요청대로 1.5 Pro 설정)
 # 만약 1.5 Pro가 안 되면 'gemini-2.0-flash'로 변경하세요.

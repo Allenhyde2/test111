@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Gemini 챗봇</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; }
+        #chat-box { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; }
+        .user { color: blue; text-align: right; }
+        .bot { color: green; font-weight: bold; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+
+    <h2>Gemini 1.5 Pro 챗봇</h2>
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="질문을 입력하세요..." style="width: 70%;">
+    <button onclick="sendMessage()">전송</button>
+
+    <script>
+        async function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const chatBox = document.getElementById('chat-box');
+            const message = inputField.value;
+
+            if (!message) return;
+
+            // 사용자 메시지 화면에 표시
+            chatBox.innerHTML += `<p class="user">나: ${message}</p>`;
+            inputField.value = '';
+
+            try {
+                // 1. 내 서버로 전송 (포트 5000)
+                const response = await fetch('http://localhost:5000/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    chatBox.innerHTML += `<p class="error">에러: ${data.error}</p>`;
+                } else {
+                    // 2. Gemini 응답 표시
+                    chatBox.innerHTML += `<p class="bot">Gemini: ${data.reply}</p>`;
+                }
+            } catch (error) {
+                chatBox.innerHTML += `<p class="error">서버 연결 실패</p>`;
+            }
+            
+            // 스크롤 아래로
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>

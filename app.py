@@ -14,6 +14,10 @@ genai.configure(api_key="GEMINI_API_KEY")
 # 만약 1.5 Pro가 안 되면 'gemini-2.0-flash'로 변경하세요.
 model = genai.GenerativeModel('gemini-1.5-pro')
 
+@app.route('/', methods=['GET'])
+def home():
+    return "<h1>Server is Running!</h1><p>챗봇 서버가 정상 작동 중입니다.</p>", 200
+    
 @app.route('/chat', methods=['POST'])
 def chat():
     try:

@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#151515" />
+  <title>남부터미널역 500m 맛집 모바일 리스트</title>
+  <style>
+    :root {
+      --bg: #111111;
+      --card: rgba(255,255,255,.94);
+      --card-strong: rgba(255,255,255,.985);
+      --text: #161616;
+      --muted: #6b625a;
+      --accent: #e86f3d;
+      --accent-2: #1f7a5d;
+      --line: rgba(0,0,0,.10);
+      --shadow: 0 18px 58px rgba(0,0,0,.30);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { width:100%; height:100%; margin:0; background:#111; color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Segoe UI",sans-serif; overscroll-behavior:none; }
+    body { overflow:hidden; }
+    button, a { font: inherit; }
+    button { border:0; }
+
+    .app { position:relative; width:100vw; height:100dvh; background:var(--bg); overflow:hidden; isolation:isolate; }
+    .mobile-frame { position:relative; width:min(100vw, 460px); height:100dvh; margin:0 auto; overflow:hidden; background:#151515; box-shadow:0 0 0 1px rgba(255,255,255,.05); }
+    .topbar { position:fixed; top:0; left:50%; transform:translateX(-50%); width:min(100vw,460px); z-index:30; pointer-events:none; display:flex; justify-content:space-between; align-items:center; padding:calc(12px + var(--safe-top)) 16px 10px; }
+    .brand { display:flex; align-items:center; gap:8px; color:#fff; font-size:14px; font-weight:900; letter-spacing:-.04em; text-shadow:0 2px 16px rgba(0,0,0,.48); }
+    .brand b { width:28px; height:28px; display:grid; place-items:center; border-radius:999px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.18); backdrop-filter:blur(18px); font-size:12px; }
+    .counter { padding:8px 11px; border-radius:999px; background:rgba(0,0,0,.35); color:rgba(255,255,255,.94); border:1px solid rgba(255,255,255,.15); backdrop-filter:blur(18px); font-size:12px; font-weight:850; }
+
+    .deck { position:absolute; inset:0; transform:translate3d(0,0,0); transition:transform .34s cubic-bezier(.16,1,.3,1); will-change:transform; }
+    .screen { position:relative; width:100%; height:100dvh; overflow:hidden; background:#10201c; }
+    .map-link { position:absolute; inset:0; z-index:0; color:inherit; text-decoration:none; -webkit-user-drag:none; }
+    .map-visual { position:absolute; inset:0; overflow:hidden; background:
+        radial-gradient(circle at 50% 52%, rgba(232,111,61,.22) 0 1px, transparent 80px),
+        linear-gradient(105deg, transparent 0 44%, rgba(255,255,255,.20) 44% 45.4%, transparent 45.4% 100%),
+        linear-gradient(22deg, transparent 0 58%, rgba(255,255,255,.18) 58% 59.4%, transparent 59.4% 100%),
+        linear-gradient(0deg, transparent 0 49%, rgba(255,255,255,.24) 49% 51%, transparent 51% 100%),
+        linear-gradient(90deg, transparent 0 47%, rgba(255,255,255,.22) 47% 49%, transparent 49% 100%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 42px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 1px, transparent 1px 42px),
+        linear-gradient(135deg, #1e2f29, #263d32 42%, #14211f); filter:saturate(1.05); }
+    .map-visual::before { content:""; position:absolute; inset:-20%; background:radial-gradient(circle at 18% 18%, rgba(112,198,146,.18), transparent 24%), radial-gradient(circle at 84% 32%, rgba(242,185,119,.16), transparent 24%), radial-gradient(circle at 52% 84%, rgba(255,255,255,.11), transparent 30%); mix-blend-mode:screen; opacity:.9; pointer-events:none; }
+    .map-copy { position:absolute; left:18px; right:18px; top:calc(68px + var(--safe-top)); z-index:4; color:#fff; text-shadow:0 2px 18px rgba(0,0,0,.54); }
+    .eyebrow { display:inline-flex; padding:8px 10px; border-radius:999px; background:rgba(0,0,0,.32); border:1px solid rgba(255,255,255,.16); backdrop-filter:blur(12px); font-size:11px; font-weight:900; letter-spacing:-.02em; }
+    .map-copy h1 { margin:12px 0 5px; font-size:32px; line-height:.98; font-weight:950; letter-spacing:-.075em; }
+    .map-copy p { margin:0; font-size:13px; font-weight:800; opacity:.92; }
+    .station { position:absolute; left:50%; top:47%; transform:translate(-50%,-50%); width:96px; height:96px; border-radius:999px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.22); display:grid; place-items:center; backdrop-filter:blur(10px); box-shadow:0 12px 34px rgba(0,0,0,.20); }
+    .station::before { content:"3"; width:34px; height:34px; border-radius:999px; display:grid; place-items:center; background:#f28f39; color:white; font-weight:950; box-shadow:0 10px 22px rgba(0,0,0,.25); }
+    .station-label { position:absolute; top:calc(47% + 54px); left:50%; transform:translateX(-50%); padding:6px 10px; border-radius:999px; color:#fff; font-size:12px; font-weight:900; background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.16); backdrop-filter:blur(12px); white-space:nowrap; text-shadow:0 1px 8px rgba(0,0,0,.4); }
+    .pin { position:absolute; left:calc(var(--pin-x) * 1%); top:calc(var(--pin-y) * 1%); transform:translate(-50%, -88%); width:48px; height:48px; border-radius:50% 50% 50% 8px; rotate:-45deg; background:linear-gradient(135deg,#ff8a55,#e24e2d); box-shadow:0 18px 34px rgba(0,0,0,.30); z-index:2; }
+    .pin::after { content:""; position:absolute; width:18px; height:18px; border-radius:999px; background:#fff; inset:15px; box-shadow:inset 0 0 0 4px rgba(226,78,45,.12); }
+    .pin-label { position:absolute; left:calc(var(--pin-x) * 1%); top:calc(var(--pin-y) * 1%); transform:translate(-50%,10px); z-index:3; padding:7px 10px; border-radius:999px; color:#fff; background:rgba(0,0,0,.42); border:1px solid rgba(255,255,255,.14); backdrop-filter:blur(10px); font-size:12px; font-weight:950; white-space:nowrap; }
+    .map-tap { position:absolute; right:16px; top:calc(190px + var(--safe-top)); z-index:4; padding:10px 12px; border-radius:999px; color:#fff; background:rgba(0,0,0,.38); border:1px solid rgba(255,255,255,.18); backdrop-filter:blur(12px); font-size:12px; font-weight:950; }
+
+    .sheet { position:absolute; left:10px; right:10px; bottom:calc(10px + var(--safe-bottom)); z-index:10; max-height:68dvh; overflow:hidden; padding:15px 13px 13px; border-radius:28px; background:var(--card); border:1px solid rgba(255,255,255,.60); box-shadow:var(--shadow); backdrop-filter:blur(22px); }
+    .sheet-head { display:flex; gap:10px; align-items:flex-start; margin-bottom:9px; }
+    .number { flex:0 0 auto; width:38px; height:38px; border-radius:14px; display:grid; place-items:center; background:#151515; color:#fff; font-size:14px; font-weight:950; }
+    .title-wrap { min-width:0; }
+    .title-wrap h2 { margin:0; font-size:24px; line-height:1.03; letter-spacing:-.07em; font-weight:950; }
+    .title-wrap small { display:block; margin-top:5px; color:var(--muted); font-size:11px; font-weight:850; letter-spacing:-.02em; }
+    .chips { display:flex; gap:6px; overflow-x:auto; padding:0 0 9px; scrollbar-width:none; }
+    .chips::-webkit-scrollbar, .photo-strip::-webkit-scrollbar, .menu-tags::-webkit-scrollbar { display:none; }
+    .chip { flex:0 0 auto; display:inline-flex; align-items:center; min-height:28px; padding:7px 10px; border-radius:999px; background:rgba(0,0,0,.07); color:#46413d; font-size:11px; font-weight:900; letter-spacing:-.02em; white-space:nowrap; }
+    .chip.primary { color:#fff; background:linear-gradient(135deg, var(--accent), #d6532b); }
+    .meta-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:9px; }
+    .meta { min-height:52px; padding:9px 10px; border-radius:16px; background:rgba(255,255,255,.70); border:1px solid rgba(0,0,0,.06); }
+    .meta b { display:block; margin-bottom:4px; font-size:10px; color:#8a8177; font-weight:950; }
+    .meta span { display:block; color:#181818; font-size:12px; line-height:1.22; font-weight:850; letter-spacing:-.03em; }
+    .summary { margin:0 2px 10px; color:#4e4842; font-size:13px; line-height:1.37; font-weight:760; letter-spacing:-.025em; }
+
+    .photo-head, .menu-head { display:flex; justify-content:space-between; align-items:center; color:#5e5a55; font-size:11px; font-weight:950; letter-spacing:-.02em; }
+    .photo-head { padding:0 4px 7px; }
+    .photo-head span:last-child { color:#9b6a4d; }
+    .photo-strip { display:flex; gap:8px; margin:0 -4px 10px; padding:0 4px 2px; overflow-x:auto; scrollbar-width:none; touch-action:pan-x; scroll-snap-type:x mandatory; }
+    .photo-tile { position:relative; flex:0 0 132px; height:84px; padding:0; overflow:hidden; border:0; border-radius:18px; background:#ded6ca; box-shadow:0 8px 18px rgba(0,0,0,.09); scroll-snap-align:start; cursor:pointer; }
+    .photo-tile img { width:100%; height:100%; object-fit:cover; display:block; background:#d7cec2; }
+    .photo-tile::after { content:""; position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,.08) 58%, rgba(0,0,0,0)); pointer-events:none; }
+    .photo-tile b { position:absolute; left:9px; right:9px; bottom:8px; z-index:2; color:#fff; font-size:11px; line-height:1.12; font-weight:950; letter-spacing:-.025em; text-shadow:0 1px 8px rgba(0,0,0,.5); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .photo-tile em { position:absolute; top:7px; left:8px; z-index:2; min-width:22px; height:22px; display:inline-grid; place-items:center; padding:0 7px; border-radius:999px; color:#fff; background:rgba(0,0,0,.38); border:1px solid rgba(255,255,255,.18); backdrop-filter:blur(10px); font-size:10px; font-style:normal; font-weight:950; }
+    .menu-head { margin:2px 4px 7px; }
+    .menu-tags { display:flex; gap:7px; overflow-x:auto; padding:0 1px 10px; scrollbar-width:none; touch-action:pan-x; }
+    .menu-pill { flex:0 0 auto; display:inline-flex; align-items:center; min-height:30px; padding:8px 10px; border-radius:999px; color:#2c2825; background:rgba(232,111,61,.12); border:1px solid rgba(232,111,61,.18); font-size:12px; font-weight:900; white-space:nowrap; letter-spacing:-.025em; }
+    .actions { display:grid; grid-template-columns:1fr 78px; gap:8px; }
+    .detail-btn, .naver-mini { display:flex; align-items:center; justify-content:center; min-height:48px; border-radius:18px; text-decoration:none; font-size:14px; font-weight:950; letter-spacing:-.03em; cursor:pointer; }
+    .detail-btn { color:#fff; background:#151515; }
+    .naver-mini { color:#fff; background:var(--accent-2); }
+
+    .dots { position:fixed; right:calc(50% - min(50vw,230px) + 10px); top:50%; transform:translateY(-50%); z-index:28; display:flex; flex-direction:column; gap:7px; pointer-events:none; }
+    .dot { width:6px; height:6px; border-radius:999px; background:rgba(255,255,255,.48); transition:.25s ease; box-shadow:0 1px 8px rgba(0,0,0,.3); }
+    .dot.active { height:22px; background:#fff; }
+
+    .menu-detail { position:fixed; inset:0; z-index:50; background:#f7f2ea; color:var(--text); transform:translateY(100%); transition:transform .34s cubic-bezier(.16,1,.3,1); display:flex; justify-content:center; }
+    .menu-detail.active { transform:translateY(0); }
+    .detail-inner { width:min(100vw,460px); height:100dvh; overflow-y:auto; padding:calc(16px + var(--safe-top)) 16px calc(22px + var(--safe-bottom)); }
+    .detail-top { position:sticky; top:0; z-index:3; display:flex; align-items:center; justify-content:space-between; margin:-4px -4px 14px; padding:6px 4px 10px; background:linear-gradient(#f7f2ea 70%, rgba(247,242,234,0)); }
+    .back-btn, .detail-count { display:inline-flex; align-items:center; justify-content:center; padding:10px 12px; border-radius:999px; background:rgba(0,0,0,.08); color:#161616; font-size:13px; font-weight:950; }
+    .detail-title { padding:12px 2px 14px; }
+    .detail-title h3 { margin:0 0 8px; font-size:32px; line-height:1; letter-spacing:-.07em; font-weight:950; }
+    .detail-title p { margin:0; color:#5f5b54; line-height:1.45; font-size:14px; font-weight:750; letter-spacing:-.025em; }
+    .menu-list { display:grid; gap:10px; }
+    .menu-card { display:grid; gap:6px; padding:15px 14px; border-radius:22px; background:rgba(255,255,255,.76); border:1px solid rgba(0,0,0,.08); box-shadow:0 8px 26px rgba(0,0,0,.05); }
+    .menu-card .row { display:flex; justify-content:space-between; gap:14px; align-items:baseline; }
+    .menu-card h4 { margin:0; font-size:17px; line-height:1.22; letter-spacing:-.05em; font-weight:930; }
+    .menu-card strong { white-space:nowrap; font-size:14px; color:#d45b31; font-weight:950; }
+    .menu-card p { margin:0; color:#68625b; font-size:13px; line-height:1.38; font-weight:730; }
+    .detail-map { display:flex; align-items:center; justify-content:center; min-height:52px; margin-top:14px; border-radius:18px; background:#151515; color:#fff; text-decoration:none; font-weight:950; letter-spacing:-.02em; }
+    .footnote { margin:16px 2px 4px; color:#786f65; font-size:11px; line-height:1.5; font-weight:700; letter-spacing:-.015em; }
+
+    .lightbox { position:fixed; inset:0; z-index:80; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.94); color:#fff; touch-action:none; }
+    .lightbox.active { display:flex; }
+    .lightbox-inner { position:relative; width:min(100vw,460px); height:100dvh; display:grid; grid-template-rows:auto 1fr auto; padding:calc(13px + var(--safe-top)) 12px calc(14px + var(--safe-bottom)); }
+    .lightbox-top { display:flex; justify-content:space-between; align-items:center; gap:10px; z-index:2; }
+    .lightbox-title { min-width:0; }
+    .lightbox-title b { display:block; font-size:15px; font-weight:950; letter-spacing:-.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .lightbox-title span { display:block; margin-top:3px; color:rgba(255,255,255,.62); font-size:12px; font-weight:800; }
+    .close-lightbox { width:42px; height:42px; border-radius:999px; color:#fff; background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.14); font-size:18px; font-weight:950; }
+    .lightbox-stage { min-height:0; display:flex; align-items:center; justify-content:center; padding:14px 0; }
+    .lightbox-stage img { max-width:100%; max-height:100%; border-radius:22px; object-fit:contain; box-shadow:0 24px 80px rgba(0,0,0,.46); background:#272727; }
+    .lightbox-bottom { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .photo-nav { width:48px; height:48px; border-radius:999px; color:#fff; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.14); font-size:20px; font-weight:950; }
+    .lightbox-count { flex:1; text-align:center; color:rgba(255,255,255,.75); font-size:12px; font-weight:850; }
+
+    .desktop-notice { display:none; }
+
+    @media (min-width:760px) {
+      body { background:radial-gradient(circle at 20% 10%, rgba(232,111,61,.20), transparent 30%), radial-gradient(circle at 80% 80%, rgba(31,122,93,.20), transparent 28%), #111; }
+      .desktop-notice { display:block; position:fixed; left:24px; top:24px; color:rgba(255,255,255,.72); max-width:280px; font-size:13px; line-height:1.5; z-index:100; }
+      .mobile-frame { border-radius:34px; height:min(100dvh - 28px, 900px); margin-top:14px; box-shadow:0 0 0 10px rgba(255,255,255,.04), 0 36px 90px rgba(0,0,0,.45); }
+      .topbar { top:14px; }
+      .dots { right:calc(50% - 220px + 10px); }
+    }
+
+    @media (max-height:720px) {
+      .sheet { max-height:72dvh; padding:12px 12px 11px; border-radius:24px; }
+      .title-wrap h2 { font-size:21px; }
+      .meta-grid { gap:6px; margin-bottom:7px; }
+      .meta { min-height:48px; padding:8px 9px; }
+      .summary { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+      .photo-tile { flex-basis:118px; height:74px; border-radius:16px; }
+      .photo-head { padding-bottom:5px; }
+      .actions { grid-template-columns:1fr 70px; }
+      .detail-btn, .naver-mini { min-height:44px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="desktop-notice">모바일 전용 시안을 데스크톱에서 보고 있습니다. 휴대폰에서는 전체 화면 세로 스와이프 방식으로 열립니다.</div>
+  <main class="app" aria-label="남부터미널역 맛집 모바일 웹페이지">
+    <section class="mobile-frame" id="frame">
+      <header class="topbar">
+        <div class="brand"><b>南</b> 남부터미널 500m</div>
+        <div class="counter"><span id="currentIndex">1</span> / <span id="totalCount">7</span></div>
+      </header>
+      <nav class="dots" id="dots" aria-label="식당 화면 위치"></nav>
+      <div class="deck" id="deck"></div>
+    </section>
+  </main>
+
+  <aside class="menu-detail" id="menuDetail" aria-hidden="true">
+    <div class="detail-inner">
+      <div class="detail-top">
+        <button class="back-btn" type="button" id="backBtn">← 리스트로</button>
+        <span class="detail-count" id="detailCount">메뉴</span>
+      </div>
+      <div class="detail-title">
+        <h3 id="detailName">식당명</h3>
+        <p id="detailIntro">메뉴 상세</p>
+      </div>
+      <div class="menu-list" id="detailMenuList"></div>
+      <a id="detailMapLink" class="detail-map" href="#" target="_blank" rel="noopener">네이버 지도에서 검색하기</a>
+      <p class="footnote">메뉴와 가격은 검색 확인 시점 기준으로 구성했습니다. 실제 방문 전 영업시간, 휴무, 룸/예약, 가격 변동 여부를 네이버 지도 또는 매장에 다시 확인하세요.</p>
+    </div>
+  </aside>
+
+  <aside class="lightbox" id="photoLightbox" aria-hidden="true">
+    <div class="lightbox-inner">
+      <div class="lightbox-top">
+        <div class="lightbox-title">
+          <b id="lightboxName">식당명</b>
+          <span id="lightboxCaption">사진</span>
+        </div>
+        <button type="button" class="close-lightbox" id="closeLightbox" aria-label="전체 화면 닫기">×</button>
+      </div>
+      <div class="lightbox-stage">
+        <img id="lightboxImg" alt="전체 화면 사진" />
+      </div>
+      <div class="lightbox-bottom">
+        <button type="button" class="photo-nav" id="prevPhoto" aria-label="이전 사진">‹</button>
+        <div class="lightbox-count" id="lightboxCount">1 / 10</div>
+        <button type="button" class="photo-nav" id="nextPhoto" aria-label="다음 사진">›</button>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    const restaurants = [
+  {
+    "slug": "solsot",
+    "order": "01",
+    "name": "솔솥 남부터미널점",
+    "requested": "요청명: 솥솥",
+    "genre": "한식 · 솥밥",
+    "address": "서울 서초구 효령로 310",
+    "hours": "매일 11:00–21:00",
+    "priceRange": "약 1.7만–2.5만원대",
+    "menus": [
+      {
+        "name": "[NEW] 랍스터 새우 솥밥",
+        "price": "17,900원",
+        "note": "새우/해산물 계열 솥밥"
+      },
+      {
+        "name": "스테이크솥밥",
+        "price": "17,000원",
+        "note": "고기 선호자용 대표 메뉴"
+      },
+      {
+        "name": "도미관자솥밥",
+        "price": "17,000원",
+        "note": "담백한 생선·관자 조합"
+      },
+      {
+        "name": "민물장어솥밥",
+        "price": "25,000원",
+        "note": "보양 느낌이 있는 고가 메뉴"
+      },
+      {
+        "name": "연어솥밥",
+        "price": "17,000원",
+        "note": "가볍게 먹기 좋은 솥밥"
+      }
+    ],
+    "features": [
+      "주차가능",
+      "유아의자",
+      "포장",
+      "개별 솥밥",
+      "저녁식사"
+    ],
+    "recommendation": "깔끔하게 1인 한상으로 먹기 좋은 솥밥. 메뉴 선택이 쉬워 6명 각자 취향대로 고르기 편합니다.",
+    "mapQuery": "솔솥 남부터미널점",
+    "pin": {
+      "x": 56,
+      "y": 34
+    },
+    "mapNote": "남부터미널역 북동쪽 효령로 인근",
+    "mapUrl": "https://map.naver.com/p/search/%EC%86%94%EC%86%A5%20%EB%82%A8%EB%B6%80%ED%84%B0%EB%AF%B8%EB%84%90%EC%A0%90",
+    "menuSummary": "[NEW] 랍스터 새우 솥밥 · 스테이크솥밥 · 도미관자솥밥"
+  },
+  {
+    "slug": "jinlai",
+    "order": "02",
+    "name": "진라이 서초점",
+    "requested": "",
+    "genre": "중식 · 중식당",
+    "address": "서울 서초구 남부순환로 2457",
+    "hours": "매일 11:00–21:00",
+    "priceRange": "식사 1만원대 · 요리 2만원대부터",
+    "menus": [
+      {
+        "name": "진라이 돼지고기 탕수육(소)",
+        "price": "20,000원",
+        "note": "6명 공유 메뉴로 무난"
+      },
+      {
+        "name": "옛날짬뽕",
+        "price": "10,000원",
+        "note": "식사 메뉴"
+      },
+      {
+        "name": "옛날볶음밥+후라이",
+        "price": "10,000원",
+        "note": "맵지 않은 식사 메뉴"
+      },
+      {
+        "name": "중식냉면",
+        "price": "13,000원",
+        "note": "여름철 선택지"
+      },
+      {
+        "name": "잡채볶음밥+후라이",
+        "price": "13,000원",
+        "note": "든든한 밥 메뉴"
+      }
+    ],
+    "features": [
+      "예약가능",
+      "주차가능",
+      "포장",
+      "중식 코스/단품",
+      "모임 후보"
+    ],
+    "recommendation": "한식 외 선택지로 가장 안정적인 중식. 어머님 6명이 공유 요리와 각자 식사를 나누기 좋습니다.",
+    "mapQuery": "진라이 서초점",
+    "pin": {
+      "x": 72,
+      "y": 58
+    },
+    "mapNote": "남부터미널역 동쪽 남부순환로변",
+    "mapUrl": "https://map.naver.com/p/search/%EC%A7%84%EB%9D%BC%EC%9D%B4%20%EC%84%9C%EC%B4%88%EC%A0%90",
+    "menuSummary": "진라이 돼지고기 탕수육(소) · 옛날짬뽕 · 옛날볶음밥+후라이"
+  },
+  {
+    "slug": "phohoai",
+    "order": "03",
+    "name": "포하이 서초점",
+    "requested": "",
+    "genre": "베트남음식 · 쌀국수",
+    "address": "서울 서초구 효령로68길 112",
+    "hours": "11:00–22:00 · B/T 15:00–17:00",
+    "priceRange": "약 1.1만–1.6만원대",
+    "menus": [
+      {
+        "name": "포하이쌀국수",
+        "price": "11,900원",
+        "note": "기본 쌀국수"
+      },
+      {
+        "name": "포하이 다이어트쌀국수",
+        "price": "12,900원",
+        "note": "가볍게 먹는 선택지"
+      },
+      {
+        "name": "숯불볏짚분짜",
+        "price": "13,900원",
+        "note": "나눠 먹기 좋은 분짜"
+      },
+      {
+        "name": "왕갈비 쌀국수",
+        "price": "15,900원",
+        "note": "푸짐한 고기 토핑"
+      },
+      {
+        "name": "팟타이",
+        "price": "12,900원",
+        "note": "면이지만 국물 없는 메뉴"
+      }
+    ],
+    "features": [
+      "예약가능",
+      "포장",
+      "배달",
+      "주차불가",
+      "캐주얼"
+    ],
+    "recommendation": "쌀국수·분짜로 분위기를 바꾸고 싶을 때. 한식보다 가볍고 캐주얼한 모임에 맞습니다.",
+    "mapQuery": "포하이 서초점",
+    "pin": {
+      "x": 68,
+      "y": 38
+    },
+    "mapNote": "효령로68길 1층, 역 동북쪽 골목",
+    "mapUrl": "https://map.naver.com/p/search/%ED%8F%AC%ED%95%98%EC%9D%B4%20%EC%84%9C%EC%B4%88%EC%A0%90",
+    "menuSummary": "포하이쌀국수 · 포하이 다이어트쌀국수 · 숯불볏짚분짜"
+  },
+  {
+    "slug": "seocho-sujebi",
+    "order": "04",
+    "name": "서초수제비",
+    "requested": "",
+    "genre": "한식 · 수제비/칼국수",
+    "address": "서울 서초구 효령로57길 4",
+    "hours": "평일 11:00–20:00 · B/T 15:00–17:00 · 주말 휴무",
+    "priceRange": "9천–1.2만원대",
+    "menus": [
+      {
+        "name": "수제비",
+        "price": "9,000원",
+        "note": "가장 기본 한식 면 메뉴"
+      },
+      {
+        "name": "칼국수",
+        "price": "9,000원",
+        "note": "맵지 않고 무난"
+      },
+      {
+        "name": "칼제비",
+        "price": "10,000원",
+        "note": "수제비+칼국수 조합"
+      },
+      {
+        "name": "비빔밀면",
+        "price": "11,000원",
+        "note": "새콤매콤한 면"
+      },
+      {
+        "name": "수제돈까스",
+        "price": "12,000원",
+        "note": "면류가 싫은 분을 위한 선택지"
+      }
+    ],
+    "features": [
+      "한식",
+      "가성비",
+      "칼국수",
+      "수제비",
+      "주말휴무"
+    ],
+    "recommendation": "가볍고 편한 한식. 격식 있는 모임보다는 부담 없이 따뜻한 면 한 그릇 먹는 자리로 좋습니다.",
+    "mapQuery": "서초수제비",
+    "pin": {
+      "x": 55,
+      "y": 43
+    },
+    "mapNote": "효령로57길, 남부터미널역 북쪽 골목",
+    "mapUrl": "https://map.naver.com/p/search/%EC%84%9C%EC%B4%88%EC%88%98%EC%A0%9C%EB%B9%84",
+    "menuSummary": "수제비 · 칼국수 · 칼제비"
+  },
+  {
+    "slug": "seongdeok",
+    "order": "05",
+    "name": "성덕 서초점",
+    "requested": "",
+    "genre": "중식 · 딤섬/우육면",
+    "address": "서울 서초구 서초중앙로 38",
+    "hours": "매일 11:00–22:00 · B/T 15:00–17:00",
+    "priceRange": "딤섬 5천–7천원 · 식사 9천원대부터",
+    "menus": [
+      {
+        "name": "소롱포",
+        "price": "5,000원",
+        "note": "가볍게 추가하기 좋은 딤섬"
+      },
+      {
+        "name": "수제군만두",
+        "price": "7,000원",
+        "note": "바삭한 추천 메뉴"
+      },
+      {
+        "name": "매운완탕",
+        "price": "6,000원",
+        "note": "매운맛 사이드"
+      },
+      {
+        "name": "맑은우육면",
+        "price": "9,000원",
+        "note": "식사 메뉴"
+      },
+      {
+        "name": "볶음면",
+        "price": "9,000원",
+        "note": "국물 없는 식사 메뉴"
+      }
+    ],
+    "features": [
+      "딤섬",
+      "우육면",
+      "유료주차",
+      "홍콩풍",
+      "캐주얼"
+    ],
+    "recommendation": "딤섬을 조금씩 나눠 먹는 재미가 있는 곳. 단, 조용한 어머님 모임보다는 캐주얼 맛집 느낌입니다.",
+    "mapQuery": "성덕 서초점",
+    "pin": {
+      "x": 43,
+      "y": 50
+    },
+    "mapNote": "남부터미널역 1번 출구 인근",
+    "mapUrl": "https://map.naver.com/p/search/%EC%84%B1%EB%8D%95%20%EC%84%9C%EC%B4%88%EC%A0%90",
+    "menuSummary": "소롱포 · 수제군만두 · 매운완탕"
+  },
+  {
+    "slug": "hwahwadon",
+    "order": "06",
+    "name": "화화돈 남부터미널점",
+    "requested": "",
+    "genre": "돈카츠 · 쌀국수/소바",
+    "address": "서울 서초구 서초중앙로 26",
+    "hours": "10:30–22:00 · L/O 21:00",
+    "priceRange": "세트 약 1.4만원대부터",
+    "menus": [
+      {
+        "name": "등심카츠와 오리지널 쌀국수 세트",
+        "price": "약 14,500원",
+        "note": "대표 세트로 알려진 조합"
+      },
+      {
+        "name": "수제 등심카츠",
+        "price": "매장 확인",
+        "note": "돈카츠 단품"
+      },
+      {
+        "name": "수제 안심카츠",
+        "price": "매장 확인",
+        "note": "부드러운 카츠"
+      },
+      {
+        "name": "오리지널 소고기 쌀국수",
+        "price": "매장 확인",
+        "note": "국물 메뉴"
+      },
+      {
+        "name": "냉 메밀소바",
+        "price": "매장 확인",
+        "note": "가벼운 소바 메뉴"
+      }
+    ],
+    "features": [
+      "돈카츠",
+      "쌀국수",
+      "소바",
+      "1·2층 좌석",
+      "역 바로 앞"
+    ],
+    "recommendation": "돈카츠와 쌀국수를 한 번에 고를 수 있어 취향이 갈리는 모임에 편합니다. 격식보다는 실용형 선택지입니다.",
+    "mapQuery": "화화돈 남부터미널점",
+    "pin": {
+      "x": 47,
+      "y": 55
+    },
+    "mapNote": "남부터미널역 4번 출구 바로 앞",
+    "mapUrl": "https://map.naver.com/p/search/%ED%99%94%ED%99%94%EB%8F%88%20%EB%82%A8%EB%B6%80%ED%84%B0%EB%AF%B8%EB%84%90%EC%A0%90",
+    "menuSummary": "등심카츠와 오리지널 쌀국수 세트 · 수제 등심카츠 · 수제 안심카츠"
+  },
+  {
+    "slug": "haedamche",
+    "order": "07",
+    "name": "해담채 남부터미널점",
+    "requested": "",
+    "genre": "한식 · 해산물 한정식",
+    "address": "서울 서초구 서초중앙로5길 10-8 쁘띠오피스텔 B1",
+    "hours": "평일 11:00–22:00 · 토/공휴일 11:00–21:00 · 일요일 휴무",
+    "priceRange": "정식 3.8만–4.8만원대 · 코스 5만–8.5만원대",
+    "menus": [
+      {
+        "name": "해담채 정식",
+        "price": "38,000원",
+        "note": "회/세꼬시·초밥·구이·매운탕 구성"
+      },
+      {
+        "name": "해담채 특정식",
+        "price": "48,000원",
+        "note": "간장게장 포함 상위 정식"
+      },
+      {
+        "name": "보리굴비 정식",
+        "price": "38,000원",
+        "note": "어머님 선호도 높은 메뉴"
+      },
+      {
+        "name": "해담채 바다 B",
+        "price": "50,000원",
+        "note": "저녁 코스 시작 가격대"
+      },
+      {
+        "name": "해담채 바다 A",
+        "price": "60,000원",
+        "note": "회/해산물 강화 코스"
+      }
+    ],
+    "features": [
+      "프라이빗 룸",
+      "룸 34개",
+      "발렛",
+      "예약추천",
+      "6인 모임 최적"
+    ],
+    "recommendation": "6명 어머님 모임에 가장 안정적인 한식. 룸이 많고 발렛이 가능해 대화 중심 저녁에 적합합니다.",
+    "mapQuery": "해담채 남부터미널점",
+    "pin": {
+      "x": 32,
+      "y": 60
+    },
+    "mapNote": "남부터미널역 6번 출구 방향 골목",
+    "mapUrl": "https://map.naver.com/p/search/%ED%95%B4%EB%8B%B4%EC%B1%84%20%EB%82%A8%EB%B6%80%ED%84%B0%EB%AF%B8%EB%84%90%EC%A0%90",
+    "menuSummary": "해담채 정식 · 해담채 특정식 · 보리굴비 정식"
+  }
+];
+    const photoSets = {
+  "solsot": [
+    {
+      "label": "스테이크솥밥",
+      "url": "https://loremflickr.com/640/420/rice,food?lock=1001"
+    },
+    {
+      "label": "도미관자솥밥",
+      "url": "https://loremflickr.com/640/420/seafood,food?lock=1002"
+    },
+    {
+      "label": "민물장어솥밥",
+      "url": "https://loremflickr.com/640/420/eel,food?lock=1003"
+    },
+    {
+      "label": "연어솥밥",
+      "url": "https://loremflickr.com/640/420/salmon,food?lock=1004"
+    },
+    {
+      "label": "랍스터 새우 솥밥",
+      "url": "https://loremflickr.com/640/420/shrimp,food?lock=1005"
+    },
+    {
+      "label": "솥밥 한상",
+      "url": "https://loremflickr.com/640/420/korean,food?lock=1006"
+    },
+    {
+      "label": "따뜻한 밥상",
+      "url": "https://loremflickr.com/640/420/rice,bowl?lock=1007"
+    },
+    {
+      "label": "고기 솥밥",
+      "url": "https://loremflickr.com/640/420/steak,food?lock=1008"
+    },
+    {
+      "label": "해산물 솥밥",
+      "url": "https://loremflickr.com/640/420/fish,food?lock=1009"
+    },
+    {
+      "label": "정갈한 한식",
+      "url": "https://loremflickr.com/640/420/restaurant,food?lock=1010"
+    }
+  ],
+  "jinlai": [
+    {
+      "label": "탕수육",
+      "url": "https://loremflickr.com/640/420/chinese,food?lock=2001"
+    },
+    {
+      "label": "짬뽕",
+      "url": "https://loremflickr.com/640/420/noodle,soup?lock=2002"
+    },
+    {
+      "label": "볶음밥",
+      "url": "https://loremflickr.com/640/420/fried,rice?lock=2003"
+    },
+    {
+      "label": "중식 요리",
+      "url": "https://loremflickr.com/640/420/chinese,restaurant?lock=2004"
+    },
+    {
+      "label": "딤섬",
+      "url": "https://loremflickr.com/640/420/dumpling,food?lock=2005"
+    },
+    {
+      "label": "면 요리",
+      "url": "https://loremflickr.com/640/420/noodles,food?lock=2006"
+    },
+    {
+      "label": "해물 요리",
+      "url": "https://loremflickr.com/640/420/seafood,food?lock=2007"
+    },
+    {
+      "label": "가족 중식",
+      "url": "https://loremflickr.com/640/420/restaurant,food?lock=2008"
+    },
+    {
+      "label": "공유 메뉴",
+      "url": "https://loremflickr.com/640/420/table,food?lock=2009"
+    },
+    {
+      "label": "중식 한상",
+      "url": "https://loremflickr.com/640/420/chinese,food?lock=2010"
+    }
+  ],
+  "phohoai": [
+    {
+      "label": "포하이쌀국수",
+      "url": "https://loremflickr.com/640/420/pho,food?lock=3001"
+    },
+    {
+      "label": "분짜",
+      "url": "https://loremflickr.com/640/420/vietnamese,food?lock=3002"
+    },
+    {
+      "label": "왕갈비 쌀국수",
+      "url": "https://loremflickr.com/640/420/beef,noodle?lock=3003"
+    },
+    {
+      "label": "팟타이",
+      "url": "https://loremflickr.com/640/420/padthai,food?lock=3004"
+    },
+    {
+      "label": "쌀국수 국물",
+      "url": "https://loremflickr.com/640/420/soup,noodle?lock=3005"
+    },
+    {
+      "label": "허브와 라임",
+      "url": "https://loremflickr.com/640/420/herb,food?lock=3006"
+    },
+    {
+      "label": "베트남 면요리",
+      "url": "https://loremflickr.com/640/420/vietnam,food?lock=3007"
+    },
+    {
+      "label": "새우 요리",
+      "url": "https://loremflickr.com/640/420/shrimp,food?lock=3008"
+    },
+    {
+      "label": "캐주얼 식사",
+      "url": "https://loremflickr.com/640/420/restaurant,food?lock=3009"
+    },
+    {
+      "label": "가벼운 저녁",
+      "url": "https://loremflickr.com/640/420/noodle,food?lock=3010"
+    }
+  ],
+  "seocho-sujebi": [
+    {
+      "label": "수제비",
+      "url": "https://loremflickr.com/640/420/soup,food?lock=4001"
+    },
+    {
+      "label": "칼국수",
+      "url": "https://loremflickr.com/640/420/noodles,soup?lock=4002"
+    },
+    {
+      "label": "칼제비",
+      "url": "https://loremflickr.com/640/420/noodle,food?lock=4003"
+    },
+    {
+      "label": "비빔밀면",
+      "url": "https://loremflickr.com/640/420/cold,noodle?lock=4004"
+    },
+    {
+      "label": "수제돈까스",
+      "url": "https://loremflickr.com/640/420/pork,food?lock=4005"
+    },
+    {
+      "label": "따뜻한 국물",
+      "url": "https://loremflickr.com/640/420/soup,bowl?lock=4006"
+    },
+    {
+      "label": "가성비 한식",
+      "url": "https://loremflickr.com/640/420/korean,food?lock=4007"
+    },
+    {
+      "label": "면 한 그릇",
+      "url": "https://loremflickr.com/640/420/noodles,food?lock=4008"
+    },
+    {
+      "label": "점심 식사",
+      "url": "https://loremflickr.com/640/420/restaurant,food?lock=4009"
+    },
+    {
+      "label": "편한 한식",
+      "url": "https://loremflickr.com/640/420/food,table?lock=4010"
+    }
+  ],
+  "seongdeok": [
+    {
+      "label": "소롱포",
+      "url": "https://loremflickr.com/640/420/dumpling,food?lock=5001"
+    },
+    {
+      "label": "수제군만두",
+      "url": "https://loremflickr.com/640/420/fried,dumpling?lock=5002"
+    },
+    {
+      "label": "매운완탕",
+      "url": "https://loremflickr.com/640/420/wonton,soup?lock=5003"
+    },
+    {
+      "label": "맑은우육면",
+      "url": "https://loremflickr.com/640/420/beef,noodle?lock=5004"
+    },
+    {
+      "label": "볶음면",
+      "url": "https://loremflickr.com/640/420/noodles,food?lock=5005"
+    },
+    {
+      "label": "딤섬 모임",
+      "url": "https://loremflickr.com/640/420/dim,sum?lock=5006"
+    },
+    {
+      "label": "중화 면요리",
+      "url": "https://loremflickr.com/640/420/chinese,noodle?lock=5007"
+    },
+    {
+      "label": "가벼운 사이드",
+      "url": "https://loremflickr.com/640/420/dumplings,food?lock=5008"
+    },
+    {
+      "label": "홍콩풍 식사",
+      "url": "https://loremflickr.com/640/420/chinese,restaurant?lock=5009"
+    },
+    {
+      "label": "캐주얼 중식",
+      "url": "https://loremflickr.com/640/420/restaurant,food?lock=5010"
+    }
+  ],
+  "hwahwadon": [
+    {
+      "label": "등심카츠 세트",
+      "url": "https://loremflickr.com/640/420/tonkatsu,food?lock=6001"
+    },
+    {
+      "label": "안심카츠",
+      "url": "https://loremflickr.com/640/420/pork,cutlet?lock=6002"
+    },
+    {
+      "label": "소고기 쌀국수",
+      "url": "https://loremflickr.com/640/420/beef,noodle?lock=6003"
+    },
+    {
+      "label": "냉 메밀소바",
+      "url": "https://loremflickr.com/640/420/soba,noodle?lock=6004"
+    },
+    {
+      "label": "돈카츠 한상",
+      "url": "https://loremflickr.com/640/420/fried,pork?lock=6005"
+    },
+    {
+      "label": "바삭한 카츠",
+      "url": "https://loremflickr.com/640/420/fried,food?lock=6006"
+    },
+    {
+      "label": "쌀국수와 카츠",
+      "url": "https://loremflickr.com/640/420/noodle,food?lock=6007"
+    },
+    {
+      "label": "역 앞 식사",
+      "url": "https://loremflickr.com/640/420/restaurant,food?lock=6008"
+    },
+    {
+      "label": "실용형 저녁",
+      "url": "https://loremflickr.com/640/420/table,food?lock=6009"
+    },
+    {
+      "label": "세트 메뉴",
+      "url": "https://loremflickr.com/640/420/food,plate?lock=6010"
+    }
+  ],
+  "haedamche": [
+    {
+      "label": "해담채 정식",
+      "url": "https://loremflickr.com/640/420/seafood,food?lock=7001"
+    },
+    {
+      "label": "해담채 특정식",
+      "url": "https://loremflickr.com/640/420/fish,food?lock=7002"
+    },
+    {
+      "label": "보리굴비 정식",
+      "url": "https://loremflickr.com/640/420/grilled,fish?lock=7003"
+    },
+    {
+      "label": "바다 코스",
+      "url": "https://loremflickr.com/640/420/sashimi,food?lock=7004"
+    },
+    {
+      "label": "간장게장",
+      "url": "https://loremflickr.com/640/420/crab,food?lock=7005"
+    },
+    {
+      "label": "해산물 한정식",
+      "url": "https://loremflickr.com/640/420/seafood,restaurant?lock=7006"
+    },
+    {
+      "label": "프라이빗 룸",
+      "url": "https://loremflickr.com/640/420/restaurant,interior?lock=7007"
+    },
+    {
+      "label": "가족 모임",
+      "url": "https://loremflickr.com/640/420/table,food?lock=7008"
+    },
+    {
+      "label": "회와 초밥",
+      "url": "https://loremflickr.com/640/420/sushi,food?lock=7009"
+    },
+    {
+      "label": "정갈한 코스",
+      "url": "https://loremflickr.com/640/420/korean,food?lock=7010"
+    }
+  ]
+};
+
+    const deck = document.getElementById('deck');
+    const frame = document.getElementById('frame');
+    const dots = document.getElementById('dots');
+    const currentIndexEl = document.getElementById('currentIndex');
+    const totalCountEl = document.getElementById('totalCount');
+    const menuDetail = document.getElementById('menuDetail');
+    const detailName = document.getElementById('detailName');
+    const detailIntro = document.getElementById('detailIntro');
+    const detailMenuList = document.getElementById('detailMenuList');
+    const detailMapLink = document.getElementById('detailMapLink');
+    const detailCount = document.getElementById('detailCount');
+    const backBtn = document.getElementById('backBtn');
+    const photoLightbox = document.getElementById('photoLightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxName = document.getElementById('lightboxName');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const lightboxCount = document.getElementById('lightboxCount');
+    const closeLightboxBtn = document.getElementById('closeLightbox');
+    const prevPhotoBtn = document.getElementById('prevPhoto');
+    const nextPhotoBtn = document.getElementById('nextPhoto');
+
+    let currentIndex = 0;
+    let locked = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchTarget = null;
+    let activePhotoRestaurant = 0;
+    let activePhotoIndex = 0;
+    let lightboxStartX = 0;
+    let lightboxStartY = 0;
+
+    totalCountEl.textContent = restaurants.length;
+
+    function esc(value) {
+      return String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+    }
+
+    function fallbackSrc(title, subtitle) {
+      const safeTitle = esc(title);
+      const safeSubtitle = esc(subtitle || '남부터미널 맛집');
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#2b4b3f"/><stop offset=".55" stop-color="#e86f3d"/><stop offset="1" stop-color="#141414"/>
+          </linearGradient>
+          <radialGradient id="r" cx="35%" cy="28%" r="62%"><stop offset="0" stop-color="#ffffff" stop-opacity=".28"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="640" height="420" fill="url(#g)"/>
+        <rect width="640" height="420" fill="url(#r)"/>
+        <circle cx="520" cy="70" r="86" fill="#fff" opacity=".10"/>
+        <circle cx="108" cy="336" r="112" fill="#fff" opacity=".09"/>
+        <rect x="44" y="44" width="552" height="332" rx="38" fill="#000" opacity=".18" stroke="#fff" stroke-opacity=".24"/>
+        <text x="68" y="178" fill="#fff" font-family="Apple SD Gothic Neo, Pretendard, Noto Sans KR, Arial" font-size="44" font-weight="900" letter-spacing="-2">${safeTitle}</text>
+        <text x="70" y="226" fill="#fff" opacity=".82" font-family="Apple SD Gothic Neo, Pretendard, Noto Sans KR, Arial" font-size="24" font-weight="800">${safeSubtitle}</text>
+        <text x="70" y="306" fill="#fff" opacity=".58" font-family="Arial" font-size="18" font-weight="700">image URL fallback</text>
+      </svg>`;
+      return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+    }
+
+    function photoImgHTML(photo, restName, number) {
+      const fallback = fallbackSrc(photo.label, restName);
+      return `<img src="${fallback}" data-remote-src="${esc(photo.url)}" alt="${esc(restName)} 관련 사진 ${number} - ${esc(photo.label)}" loading="lazy" referrerpolicy="no-referrer" data-fallback-title="${esc(photo.label)}" data-fallback-subtitle="${esc(restName)}" />`;
+    }
+
+    function loadRemoteImage(img) {
+      const remote = img.dataset.remoteSrc;
+      if (!remote || img.dataset.remoteRequested === '1') return;
+      img.dataset.remoteRequested = '1';
+      const tester = new Image();
+      tester.referrerPolicy = 'no-referrer';
+      let timedOut = false;
+      const timer = window.setTimeout(() => { timedOut = true; }, 4500);
+      tester.onload = () => {
+        if (timedOut) return;
+        window.clearTimeout(timer);
+        img.src = remote;
+        img.dataset.remoteLoaded = '1';
+      };
+      tester.onerror = () => window.clearTimeout(timer);
+      tester.src = remote;
+    }
+
+    function hydrateRemoteImages() {
+      const imgs = Array.from(document.querySelectorAll('img[data-remote-src]'));
+      const visible = imgs.slice(0, 14);
+      visible.forEach(loadRemoteImage);
+      const rest = imgs.slice(14);
+      const run = () => rest.forEach(loadRemoteImage);
+      if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 2500 });
+      else window.setTimeout(run, 1200);
+    }
+
+    function chipHTML(items) {
+      return items.slice(0, 5).map(item => `<span class="chip">${esc(item)}</span>`).join('');
+    }
+
+    function renderScreens() {
+      deck.innerHTML = restaurants.map((r, index) => {
+        const requested = r.requested ? `<small>${esc(r.requested)}</small>` : '';
+        const photos = photoSets[r.slug] || [];
+        const photoHTML = photos.map((photo, photoIndex) => `
+          <button class="photo-tile" type="button" data-photo-restaurant="${index}" data-photo-index="${photoIndex}" aria-label="${esc(photo.label)} 전체 화면 보기">
+            ${photoImgHTML(photo, r.name, photoIndex + 1)}
+            <em>${photoIndex + 1}</em><b>${esc(photo.label)}</b>
+          </button>
+        `).join('');
+        const menuTags = r.menus.map(m => `<span class="menu-pill">${esc(m.name)}</span>`).join('');
+        return `
+          <section class="screen" id="${esc(r.slug)}" style="--pin-x:${r.pin.x}; --pin-y:${r.pin.y};" data-index="${index}">
+            <a class="map-link" href="${esc(r.mapUrl)}" target="_blank" rel="noopener" aria-label="${esc(r.name)} 네이버 지도 검색 열기">
+              <div class="map-visual"></div>
+              <div class="map-copy">
+                <span class="eyebrow">지도 영역 탭 → 네이버 지도</span>
+                <h1>${esc(r.name)}</h1>
+                <p>${esc(r.mapNote)}</p>
+              </div>
+              <div class="station" aria-hidden="true"></div>
+              <div class="station-label">남부터미널역</div>
+              <div class="pin" aria-hidden="true"></div>
+              <div class="pin-label">${esc(r.name)}</div>
+              <span class="map-tap">지도 검색 ↗</span>
+            </a>
+            <article class="sheet" role="dialog" aria-label="${esc(r.name)} 요약 모달">
+              <div class="sheet-head">
+                <span class="number">${esc(r.order)}</span>
+                <div class="title-wrap"><h2>${esc(r.name)}</h2>${requested}</div>
+              </div>
+              <div class="chips"><span class="chip primary">${esc(r.genre)}</span>${chipHTML(r.features)}</div>
+              <div class="meta-grid">
+                <div class="meta"><b>가격대</b><span>${esc(r.priceRange)}</span></div>
+                <div class="meta"><b>영업</b><span>${esc(r.hours)}</span></div>
+              </div>
+              <p class="summary">${esc(r.recommendation)}</p>
+              <div class="photo-head"><span>관련 사진</span><span>좌우 슬라이드 · 탭하면 전체화면</span></div>
+              <div class="photo-strip" aria-label="관련 사진 슬라이드">${photoHTML}</div>
+              <div class="menu-head"><span>대표 메뉴</span><span>추천 순서</span></div>
+              <div class="menu-tags" aria-label="대표 메뉴 태그 목록">${menuTags}</div>
+              <div class="actions">
+                <button class="detail-btn" type="button" data-detail-index="${index}">메뉴 상세보기</button>
+                <a class="naver-mini" href="${esc(r.mapUrl)}" target="_blank" rel="noopener" aria-label="${esc(r.name)} 네이버 지도 검색">지도</a>
+              </div>
+            </article>
+          </section>`;
+      }).join('');
+      dots.innerHTML = restaurants.map((_, index) => `<span class="dot${index === 0 ? ' active' : ''}" data-dot="${index}"></span>`).join('');
+    }
+
+    function setPage(index, animate = true) {
+      const next = Math.max(0, Math.min(restaurants.length - 1, index));
+      if (next === currentIndex && animate) return;
+      currentIndex = next;
+      if (!animate) deck.style.transition = 'none'; else deck.style.transition = '';
+      deck.style.transform = `translate3d(0, ${-currentIndex * 100}dvh, 0)`;
+      currentIndexEl.textContent = String(currentIndex + 1);
+      document.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+      if (!animate) requestAnimationFrame(() => deck.style.transition = '');
+      const screen = document.querySelector(`.screen[data-index="${currentIndex}"]`);
+      if (screen) screen.querySelectorAll('img[data-remote-src]').forEach(loadRemoteImage);
+    }
+
+    function stepPage(direction) {
+      if (locked) return;
+      const next = Math.max(0, Math.min(restaurants.length - 1, currentIndex + direction));
+      if (next === currentIndex) return;
+      locked = true;
+      setPage(next, true);
+      window.setTimeout(() => locked = false, 390);
+    }
+
+    function openMenu(index) {
+      const r = restaurants[index];
+      detailName.textContent = r.name;
+      detailIntro.textContent = `${r.genre} · ${r.priceRange}`;
+      detailCount.textContent = `${String(index + 1).padStart(2, '0')} / ${restaurants.length}`;
+      detailMapLink.href = r.mapUrl;
+      detailMapLink.textContent = `${r.name} 네이버 지도에서 검색하기`;
+      detailMenuList.innerHTML = r.menus.map(m => `
+        <article class="menu-card">
+          <div class="row"><h4>${esc(m.name)}</h4><strong>${esc(m.price)}</strong></div>
+          <p>${esc(m.note)}</p>
+        </article>`).join('');
+      menuDetail.classList.add('active');
+      menuDetail.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeMenu() {
+      menuDetail.classList.remove('active');
+      menuDetail.setAttribute('aria-hidden', 'true');
+    }
+
+    function setLightboxPhoto() {
+      const r = restaurants[activePhotoRestaurant];
+      const set = photoSets[r.slug] || [];
+      const p = set[activePhotoIndex];
+      lightboxName.textContent = r.name;
+      lightboxCaption.textContent = p.label;
+      lightboxCount.textContent = `${activePhotoIndex + 1} / ${set.length}`;
+      lightboxImg.src = fallbackSrc(p.label, r.name);
+      lightboxImg.alt = `${r.name} 관련 사진 - ${p.label}`;
+      const tester = new Image();
+      tester.referrerPolicy = 'no-referrer';
+      const token = `${activePhotoRestaurant}-${activePhotoIndex}-${Date.now()}`;
+      lightboxImg.dataset.token = token;
+      let timedOut = false;
+      const timer = window.setTimeout(() => { timedOut = true; }, 4500);
+      tester.onload = () => {
+        if (timedOut || lightboxImg.dataset.token !== token) return;
+        window.clearTimeout(timer);
+        lightboxImg.src = p.url;
+      };
+      tester.onerror = () => window.clearTimeout(timer);
+      tester.src = p.url;
+    }
+
+    function openLightbox(restaurantIndex, photoIndex) {
+      activePhotoRestaurant = restaurantIndex;
+      activePhotoIndex = photoIndex;
+      setLightboxPhoto();
+      photoLightbox.classList.add('active');
+      photoLightbox.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeLightbox() {
+      photoLightbox.classList.remove('active');
+      photoLightbox.setAttribute('aria-hidden', 'true');
+    }
+
+    function movePhoto(direction) {
+      const r = restaurants[activePhotoRestaurant];
+      const set = photoSets[r.slug] || [];
+      activePhotoIndex = (activePhotoIndex + direction + set.length) % set.length;
+      setLightboxPhoto();
+    }
+
+    renderScreens();
+    setPage(0, false);
+    hydrateRemoteImages();
+
+    document.addEventListener('click', (event) => {
+      const detailButton = event.target.closest('[data-detail-index]');
+      if (detailButton) { event.preventDefault(); openMenu(Number(detailButton.dataset.detailIndex)); return; }
+      const photoButton = event.target.closest('[data-photo-restaurant]');
+      if (photoButton) { event.preventDefault(); event.stopPropagation(); openLightbox(Number(photoButton.dataset.photoRestaurant), Number(photoButton.dataset.photoIndex)); }
+    });
+
+    backBtn.addEventListener('click', closeMenu);
+    closeLightboxBtn.addEventListener('click', closeLightbox);
+    prevPhotoBtn.addEventListener('click', () => movePhoto(-1));
+    nextPhotoBtn.addEventListener('click', () => movePhoto(1));
+
+    frame.addEventListener('touchstart', (event) => {
+      touchStartX = event.touches[0].clientX;
+      touchStartY = event.touches[0].clientY;
+      touchTarget = event.target;
+    }, { passive:true });
+
+    frame.addEventListener('touchend', (event) => {
+      if (menuDetail.classList.contains('active') || photoLightbox.classList.contains('active')) return;
+      const endX = event.changedTouches[0].clientX;
+      const endY = event.changedTouches[0].clientY;
+      const dx = endX - touchStartX;
+      const dy = endY - touchStartY;
+      if (touchTarget?.closest('.photo-strip, .menu-tags') && Math.abs(dx) > Math.abs(dy)) return;
+      if (Math.abs(dy) > 56 && Math.abs(dy) > Math.abs(dx) * 1.1) stepPage(dy < 0 ? 1 : -1);
+    }, { passive:true });
+
+    window.addEventListener('wheel', (event) => {
+      if (menuDetail.classList.contains('active') || photoLightbox.classList.contains('active')) return;
+      if (Math.abs(event.deltaY) > 30) stepPage(event.deltaY > 0 ? 1 : -1);
+    }, { passive:true });
+
+    photoLightbox.addEventListener('touchstart', (event) => {
+      lightboxStartX = event.touches[0].clientX;
+      lightboxStartY = event.touches[0].clientY;
+    }, { passive:true });
+
+    photoLightbox.addEventListener('touchend', (event) => {
+      const dx = event.changedTouches[0].clientX - lightboxStartX;
+      const dy = event.changedTouches[0].clientY - lightboxStartY;
+      if (Math.abs(dy) > 90 && dy > Math.abs(dx)) { closeLightbox(); return; }
+      if (Math.abs(dx) > 54 && Math.abs(dx) > Math.abs(dy)) movePhoto(dx < 0 ? 1 : -1);
+    }, { passive:true });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') { if (photoLightbox.classList.contains('active')) closeLightbox(); else closeMenu(); return; }
+      if (photoLightbox.classList.contains('active')) {
+        if (event.key === 'ArrowRight') movePhoto(1);
+        if (event.key === 'ArrowLeft') movePhoto(-1);
+        return;
+      }
+      if (!menuDetail.classList.contains('active')) {
+        if (event.key === 'ArrowDown') stepPage(1);
+        if (event.key === 'ArrowUp') stepPage(-1);
+      }
+    });
+
+    window.addEventListener('resize', () => setPage(currentIndex, false));
+  </script>
+</body>
+</html>
